@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Znajdź Swoją Historię - Rozpocznij Nowy Rozdział</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #E88873; 
+            --secondary-color: #B56576; 
+            --accent-color: #F0A67D; 
+            --text-color: #333333;
+            --light-text-color: #FFFFFF; /* Zmienione na czystą biel dla lepszego kontrastu na tle gradientu */
+            --hero-text-color: #FFFFFF; /* Dedykowany kolor tekstu dla Hero */
+            --background-color: #FAF5EF; 
+            --card-background: #FFFFFF;
+            --border-radius: 16px;
+            --transition-speed: 0.4s;
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Lato', sans-serif;
+            --gradient-main: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --gradient-text: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 80px 0; 
+        }
+
+        section {
+            opacity: 0;
+            transform: translateY(50px); 
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; 
+        }
+
+        section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: clamp(2.8rem, 7vw, 4.2rem); 
+            line-height: 1.15;
+            margin-bottom: 0.5em;
+            color: var(--hero-text-color); /* Użycie dedykowanego koloru */
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 2.8rem); 
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
+        .gradient-text {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+            display: inline-block; 
+        }
+
+        p {
+            margin-bottom: 1em;
+            font-size: clamp(1rem, 2.5vw, 1.15rem); 
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--gradient-main); /* Użycie zmiennej dla gradientu */
+            color: var(--hero-text-color); /* Użycie dedykowanego koloru */
+            position: relative;
+            overflow: hidden; 
+        }
+        #particles-js-canvas { /* Zmieniono ID, aby uniknąć konfliktu z ewentualnymi bibliotekami */
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0; /* Cząsteczki pod tekstem */
+        }
+
+        .hero-content {
+            max-width: 750px; 
+            opacity: 0; /* Początkowa przezroczystość dla animacji JS */
+            transform: translateY(20px); /* Początkowe przesunięcie */
+            animation: fadeInHeroContent 1.2s ease-out 0.5s forwards;
+            position: relative; 
+            z-index: 1; /* Treść nad cząsteczkami */
+        }
+        
+        @keyframes fadeInHeroContent {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+            margin-bottom: 2.5em;
+            color: rgba(255, 255, 255, 0.9); /* Jaśniejszy podtytuł, ale nie czysta biel */
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-flex; 
+            align-items: center;
+            background-color: var(--accent-color);
+            color: #442A1E; 
+            padding: 20px 45px; 
+            font-family: var(--font-heading);
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            font-weight: 700; 
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            /* Usunięto animację pulsowania, może być rozpraszająca lub powodować problemy z wydajnością */
+        }
+        .cta-button::before { 
+            content: "";
+            position: absolute;
+            top:0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button .arrow {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        .cta-button:hover .arrow {
+            transform: translateX(5px);
+        }
+
+        .cta-button:hover, .cta-button:focus {
+            transform: translateY(-6px) scale(1.03); 
+            background-color: #FCD9B6; 
+            box-shadow: 0 10px 30px rgba(var(--accent-color), 0.5);
+        }
+
+        /* About Section */
+        .about-section .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 50px;
+        }
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        .about-visual {
+            flex: 1;
+            min-width: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px; 
+        }
+        .about-visual img { 
+            max-width: 600px; 
+            width:100%;
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            /* Usunięto transition i transform, parallax będzie dodany przez JS */
+        }
+        .about-section h2 {
+            text-align: left;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            background: linear-gradient(to bottom, var(--background-color) 0%, #fff 50%, var(--background-color) 100%); 
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 40px;
+        }
+        .testimonial-card {
+            background-color: var(--card-background);
+            padding: 35px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(var(--secondary-color),0.1); 
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            opacity: 0; 
+            /* ZMIANA TUTAJ: Kombinujemy początkowy transform z translateZ(0) */
+            transform: translateY(30px) scale(0.95) translateZ(0); 
+            display: flex; 
+            will-change: transform, box-shadow;
+            flex-direction: column; 
+        }
+        .testimonial-card.is-visible {
+            opacity: 1;
+            /* ZMIANA TUTAJ: Również dodajemy translateZ(0) do stanu "widocznego" bez hover */
+            transform: translateY(0) scale(1) translateZ(0);
+        }
+        .testimonial-card:hover {
+            /* ZMIANA TUTAJ: I do stanu hover */
+            transform: translateY(-12px) scale(1.02) translateZ(0); 
+            box-shadow: 0 15px 40px rgba(var(--secondary-color),0.15);
+        }
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; 
+        }
+        .testimonial-avatar {
+            width: 125px; 
+            height: 125px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px; 
+            border: 4px solid var(--primary-color); 
+            flex-shrink: 0; 
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges; 
+        }
+        .testimonial-author {
+            flex-grow: 1; 
+        }
+        .testimonial-author h3 {
+            font-size: 1.4rem; 
+            margin-bottom: 3px;
+            color: var(--primary-color);
+        }
+        .testimonial-author span {
+            font-size: 0.95rem;
+            color: #666;
+            display: block; 
+        }
+        .testimonial-card blockquote {
+            font-style: italic;
+            color: #444; 
+            border-left: 5px solid var(--accent-color); 
+            padding-left: 25px; 
+            margin: 0;
+            font-size: 1.1rem; 
+            flex-grow: 1; 
+            position: relative; /* Dla cudzysłowu */
+        }
+        .testimonial-card blockquote::before { 
+            content: '„';
+            font-size: 2.5em;
+            color: var(--accent-color);
+            line-height: 0;
+            position: absolute; /* Poprawione pozycjonowanie */
+            top: 10px; /* Dostosuj */
+            left: -10px; /* Dostosuj */
+            opacity: 0.8;
+        }
+
+
+        /* FAQ Section */
+        .faq-item {
+            background-color: var(--card-background);
+            margin-bottom: 20px; 
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden; 
+        }
+        .faq-question {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Dodano color transition */
+            position: relative;
+        }
+        .faq-question:hover {
+            background-color: #f8f4f0; /* Subtelniejszy hover */
+            color: var(--primary-color);
+        }
+        .faq-question .icon-arrow {
+            width: 12px;
+            height: 12px;
+            border-left: 2px solid currentColor; /* Używa koloru tekstu rodzica */
+            border-bottom: 2px solid currentColor;
+            transform: rotate(-45deg);
+            transition: transform 0.4s ease;
+        }
+        .faq-item.active .faq-question .icon-arrow {
+            transform: rotate(135deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 30px;
+            transition: max-height 0.6s cubic-bezier(0.25, 0.1, 0.25, 1), padding 0.6s cubic-bezier(0.25, 0.1, 0.25, 1); /* Inny easing */
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px; /* Zwiększone dla pewności */
+            padding: 5px 30px 25px;
+        }
+
+        /* Final CTA Section */
+        .final-cta-section {
+            background: var(--gradient-main); /* Użycie tego samego gradientu co w Hero */
+            color: var(--light-text-color);
+            padding: 100px 0;
+        }
+        .final-cta-section h2 {
+            color: var(--light-text-color); 
+            margin-bottom: 0.5em;
+        }
+        .final-cta-section .gradient-text-on-dark { /* Klasa dla gradientu tekstu na ciemnym tle */
+            background: linear-gradient(45deg, #FFFFFF, #F0A67D); /* Gradient od białego do akcentu */
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .final-cta-section p {
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2.5em;
+            color: rgba(255,255,255,0.9); /* Lekko zmieniony kolor */
+            font-size: 1.2rem;
+        }
+        .final-cta-section .cta-button { 
+            background-color: var(--light-text-color);
+            color: var(--secondary-color);
+            box-shadow: 0 6px 20px rgba(var(--secondary-color),0.3);
+        }
+         .final-cta-section .cta-button:hover {
+            background-color: #fff;
+            color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(var(--secondary-color),0.4);
+        }
+
+
+        /* Footer */
+        .footer {
+            background-color: #222; 
+            color: #b0b0b0;
+            padding: 50px 0;
+            text-align: center;
+        }
+        .footer-trust-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color); 
+            margin-bottom: 15px;
+        }
+        .footer p {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: var(--light-text-color);
+            text-decoration: underline;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 90vh; /* Dostosowanie dla mniejszych ekranów */
+            }
+            .about-section .container {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px; /* Mniejszy odstęp */
+            }
+            .about-section h2 {
+                text-align: center;
+            }
+            .testimonial-card {
+                margin-bottom: 30px; 
+            }
+            .faq-question {
+                padding: 20px 25px;
+                font-size: 1.1rem;
+            }
+            .final-cta-section p {
+                font-size: 1.1rem;
+            }
+            h1 {
+                font-size: clamp(2.2rem, 6vw, 3.5rem); /* Mniejszy H1 na mobile */
+            }
+             h2 {
+                font-size: clamp(1.6rem, 4.5vw, 2.2rem); /* Mniejszy H2 na mobile */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <canvas id="particles-js-canvas"></canvas>
+        <div class="hero-content">
+            <h1><span class="gradient-text" style="background: linear-gradient(45deg, #FFFFFF, #F0A67D); -webkit-background-clip: text; background-clip: text;">Twoja Historia Miłości</span> <br>Rozpoczyna Się Właśnie Tutaj.</h1>
+            <p class="subtitle">Odkryj świat autentycznych relacji i poznaj kogoś, kto czeka, by napisać z Tobą kolejny, piękny rozdział.</p>
+            <a href="#affiliate-link" class="cta-button" target="_blank" rel="noopener noreferrer">
+                Zobacz, Kto na Ciebie Czeka!
+                <span class="arrow">➔</span>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="about-section" id="about">
+            <div class="container">
+                <div class="about-text">
+                    <h2>Miejsce, Gdzie Rodzą Się <span class="gradient-text">Prawdziwe Uczucia</span></h2>
+                    <p>Masz dość powierzchownych znajomości i aplikacji, które obiecują wiele, a dają niewiele? Tutaj stawiamy na głębię, autentyczność i prawdziwe połączenia między ludźmi. Wierzymy, że każdy zasługuje na miłość i wartościową relację.</p>
+                    <p>Nasza (promowana) platforma została stworzona z myślą o Tobie – o Twoich potrzebach, bezpieczeństwie i komforcie. Zaawansowane narzędzia pomogą Ci odnaleźć osoby o podobnych wartościach, pasjach i marzeniach, gotowe na nowy, ekscytujący etap w życiu.</p>
+                </div>
+                <div class="about-visual">
+                    <img src="para.jpg" alt="Para ciesząca się wspólnym czasem" class="parallax-img">
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials-section" id="testimonials">
+            <div class="container">
+                <h2><span class="gradient-text">Historie</span>, Które Mówią Same Za Siebie</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="1.jpg" alt="Zofia" class="testimonial-avatar">
+                            <div class="testimonial-author">
+                                <h3>Zofia, 31 lat</h3>
+                                <span>Szczęśliwie zakochana od roku</span>
+                            </div>
+                        </div>
+                        <blockquote>
+                            Muszę przyznać, że byłam zmęczona typowymi portalami. Ciągle te same profile, powierzchowne rozmowy... Tutaj od razu poczułam inną atmosferę. Poznałam Artura, z którym od pierwszej rozmowy przegadaliśmy całą noc! Dziś planujemy wspólną przyszłość i nie mogę uwierzyć, że to wszystko zaczęło się od jednego kliknięcia.
+                        </blockquote>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="2.jpg" alt="Krzysztof" class="testimonial-avatar">
+                            <div class="testimonial-author">
+                                <h3>Krzysztof, 34 lata</h3>
+                                <span>Znalazł radość na nowo</span>
+                            </div>
+                        </div>
+                        <blockquote>
+                            Po trudnym okresie w życiu, myślałem, że rozdział 'miłość' jest już dla mnie zamknięty. Córka namówiła mnie, żebym spróbował, bez większych nadziei. A jednak! Spotkałem tu Małgosię, wspaniałą kobietę, z którą na nowo odkrywam radość życia, podróżujemy, śmiejemy się. Okazało się, że na prawdziwe uczucie nigdy nie jest za późno.
+                        </blockquote>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="3.jpg" alt="Monika" class="testimonial-avatar">
+                            <div class="testimonial-author">
+                                <h3>Monika, 22 lat</h3>
+                                <span>Odkryła bratnią duszę</span>
+                            </div>
+                        </div>
+                        <blockquote>
+                           Zawsze marzyłam o kimś, z kim mogłabym dzielić moje nietypowe pasje – długie wędrówki po Bieszczadach i wieczory z książką fantasy. Tutaj, dzięki dokładnym filtrom, trafiłam na profil Wojtka. Już pierwsza wiadomość była strzałem w dziesiątkę! Okazało się, że czytamy tych samych autorów. Teraz wspólnie planujemy kolejne wyprawy.
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section" id="faq">
+            <div class="container">
+                <h2>Masz Pytania? <span class="gradient-text">Mamy Odpowiedzi!</span></h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">Czy na pewno znajdę tu kogoś dla siebie? <span class="icon-arrow"></span></div>
+                        <div class="faq-answer">
+                            <p>Rozumiemy Twoje obawy, ale tysiące osób codziennie znajdują tu szczęście! Kluczem jest otwartość, autentyczny profil i cierpliwość. Platforma oferuje narzędzia, które znacznie zwiększają Twoje szanse na poznanie kogoś wyjątkowego, kto podziela Twoje wartości i oczekiwania.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Jakie są koszty korzystania z portalu? <span class="icon-arrow"></span></div>
+                        <div class="faq-answer">
+                            <p>Rejestracja i podstawowe przeglądanie profili na platformie, jest darmowe. Daje to możliwość rozejrzenia się i sprawdzenia, czy to miejsce dla Ciebie. Pełne funkcjonalności i większe możliwości kontaktu często wiążą się z wyborem planu subskrypcyjnego, ale o tym dowiesz się już bezpośrednio na stronie partnera.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Czy moje dane i prywatność są tu bezpieczne? <span class="icon-arrow"></span></div>
+                        <div class="faq-answer">
+                            <p>Bezpieczeństwo użytkowników to absolutny priorytet dla promowanej przez nas platformy. Stosowane są zaawansowane systemy ochrony danych, szyfrowanie oraz procedury weryfikacji, aby zapewnić Ci spokojne i dyskretne korzystanie z serwisu. Zawsze jednak pamiętaj o podstawowych zasadach bezpieczeństwa online.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="final-cta-section" id="final-cta">
+            <div class="container text-center">
+                <h2>Nie Czekaj, Aż Miłość Sama Zapuka Do Drzwi.<br><span class="gradient-text-on-dark">Daj Szansę Przeznaczeniu!</span></h2>
+                <p>Każda wielka historia miłosna zaczyna się od pierwszego kroku. Twój może zacząć się właśnie teraz. Kliknij i zobacz, jakie możliwości czekają na Ciebie!</p>
+                <a href="#affiliate-link" class="cta-button" target="_blank" rel="noopener noreferrer">
+                    Rozpocznij Swoją Przygodę Teraz!
+                    <span class="arrow">➔</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-trust-text">Miliony Singli Już Czekają. Dołącz Do Nich!</p>
+            <p>Platforma, którą polecamy, to miejsce, gdzie dyskrecja i bezpieczeństwo idą w parze z szansą na prawdziwe uczucie.</p>
+            <p>© <span id="currentYear"></span> TwojaStronaPolecajaca.pl Wszelkie prawa zastrzeżone.</p>
+            <p><a href="#privacy-policy-link-afilianta" target="_blank" rel="noopener noreferrer">Polityka Prywatności Partnera</a> | <a href="#terms-link-afilianta" target="_blank" rel="noopener noreferrer">Regulamin Partnera</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- PARTICLES SCRIPT ---
+            const canvas = document.getElementById('particles-js-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let particlesArray;
+
+                function setCanvasSize() {
+                    canvas.width = window.innerWidth;
+                    const heroSection = canvas.closest('.hero'); // Znajdź rodzica .hero
+                    canvas.height = heroSection ? heroSection.offsetHeight : window.innerHeight;
+                }
+                setCanvasSize();
+
+
+                let mouse = {
+                    x: undefined,
+                    y: undefined,
+                    radius: (canvas.height / 120) * (canvas.width / 120)
+                };
+
+                canvas.addEventListener('mousemove', function(event) {
+                    const rect = canvas.getBoundingClientRect();
+                    mouse.x = event.clientX - rect.left;
+                    mouse.y = event.clientY - rect.top;
+                });
+                canvas.addEventListener('mouseleave', function(){
+                     mouse.x = undefined;
+                     mouse.y = undefined;
+                });
+
+                class Particle {
+                    constructor(x, y, directionX, directionY, size, color) {
+                        this.x = x;
+                        this.y = y;
+                        this.directionX = directionX;
+                        this.directionY = directionY;
+                        this.size = size;
+                        this.color = color;
+                        this.baseX = this.x; // Store original x for returning
+                        this.baseY = this.y; // Store original y for returning
+                        this.density = (Math.random() * 30) + 1; // For varied reaction strength
+                    }
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                        // Ciemniejsze cząsteczki dla lepszego kontrastu z białym tekstem
+                        ctx.fillStyle = 'rgba(40, 40, 60, 0.15)'; // Ciemniejszy, bardziej subtelny kolor
+                        ctx.fill();
+                    }
+                    update() {
+                        // Interakcja z myszką
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        let forceDirectionX = dx / distance;
+                        let forceDirectionY = dy / distance;
+                        
+                        // Max distance particle will move
+                        let maxDistance = mouse.radius;
+                        // How much force to apply (closer = stronger)
+                        let force = (maxDistance - distance) / maxDistance;
+                        
+                        // Calculate movement based on force
+                        let directionX = forceDirectionX * force * this.density * 0.1; // Słabsza reakcja
+                        let directionY = forceDirectionY * force * this.density * 0.1;
+
+
+                        if (distance < mouse.radius) {
+                            this.x -= directionX; // Odepchnij cząsteczkę
+                            this.y -= directionY;
+                        } else {
+                            // Wróć do pozycji bazowej jeśli nie ma interakcji
+                            if (this.x !== this.baseX) {
+                                let dxBase = this.x - this.baseX;
+                                this.x -= dxBase / 20; // Stopniowy powrót
+                            }
+                            if (this.y !== this.baseY) {
+                                let dyBase = this.y - this.baseY;
+                                this.y -= dyBase / 20;
+                            }
+                             // Kontynuuj normalny ruch jeśli nie ma interakcji i wrócił do bazy
+                            this.x += this.directionX * 0.1; // Spowolniony normalny ruch
+                            this.y += this.directionY * 0.1;
+                        }
+
+                         // Odbijanie od krawędzi canvasa
+                        if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+                            this.directionX = -this.directionX;
+                        }
+                        if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                            this.directionY = -this.directionY;
+                        }
+
+                        this.draw();
+                    }
+                }
+
+                function initParticles() {
+                    particlesArray = [];
+                    let numberOfParticles = Math.max(30, (canvas.height * canvas.width) / 25000); // Minimalnie 30, dostosowane zagęszczenie
+                    for (let i = 0; i < numberOfParticles; i++) {
+                        let size = (Math.random() * 2) + 0.5; // Mniejsze cząsteczki (0.5 - 2.5)
+                        let x = (Math.random() * ((canvas.width - size * 2) - (size * 2)) + size * 2);
+                        let y = (Math.random() * ((canvas.height - size * 2) - (size * 2)) + size * 2);
+                        let directionX = (Math.random() * 0.2) - 0.1; 
+                        let directionY = (Math.random() * 0.2) - 0.1; 
+                        particlesArray.push(new Particle(x, y, directionX, directionY, size));
+                    }
+                }
+
+                function animateParticles() {
+                    requestAnimationFrame(animateParticles);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (let i = 0; i < particlesArray.length; i++) {
+                        particlesArray[i].update();
+                    }
+                }
+                
+                let resizeTimer;
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(function() {
+                        setCanvasSize();
+                        mouse.radius = (canvas.height / 120) * (canvas.width / 120);
+                        initParticles(); 
+                    }, 250); 
+                });
+
+                initParticles();
+                animateParticles();
+            } 
+
+            // --- SCROLL REVEAL ---
+            const scrollRevealElements = document.querySelectorAll('main section, .testimonial-card');
+
+            const revealObserverOptions = {
+                root: null, 
+                rootMargin: '0px',
+                threshold: 0.1 // Zmniejszone dla szybszego pojawiania
+            };
+
+            const revealCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                         // Sekcje główne animujemy tylko raz, karty opinii mogą się animować wielokrotnie jeśli potrzeba
+                        if (!entry.target.classList.contains('testimonial-card')) {
+                           observer.unobserve(entry.target);
+                        }
+                    } else {
+                        // Opcjonalnie dla kart opinii, jeśli mają się chować i animować ponownie:
+                        // if (entry.target.classList.contains('testimonial-card')) {
+                        //    entry.target.classList.remove('is-visible');
+                        // }
+                    }
+                });
+            };
+            const revealObserver = new IntersectionObserver(revealCallback, revealObserverOptions);
+            
+            scrollRevealElements.forEach((el, index) => {
+                if (el.classList.contains('testimonial-card')) {
+                    el.style.transitionDelay = `${index * 0.1}s`; // Opóźnienie tylko dla kart
+                }
+                revealObserver.observe(el);
+            });
+            
+            // --- PARALLAX FOR IMAGE IN ABOUT SECTION ---
+            const parallaxImg = document.querySelector('.about-visual .parallax-img');
+            if (parallaxImg) {
+                // Domyślna prędkość parallaxu, można nadpisać w data-parallax-speed
+                const defaultParallaxSpeed = 0.1; 
+                
+                window.addEventListener('scroll', function() {
+                    const parallaxSpeedAttr = parallaxImg.getAttribute('data-parallax-speed');
+                    const speed = parallaxSpeedAttr ? parseFloat(parallaxSpeedAttr) : defaultParallaxSpeed;
+                    
+                    const imgRect = parallaxImg.getBoundingClientRect();
+                    // Sprawdzamy czy obrazek jest blisko viewportu
+                    if (imgRect.top < window.innerHeight * 1.2 && imgRect.bottom > - (window.innerHeight * 0.2) ) {
+                        // Chcemy, aby parallax działał względem środka viewportu
+                        // (window.innerHeight / 2) - imgRect.top - (imgRect.height / 2)
+                        // Daje nam to odległość środka obrazka od środka viewportu
+                        // Im dalej, tym większy offset. Przemnożone przez speed daje efekt.
+                        let offset = ((window.innerHeight / 2) - (imgRect.top + imgRect.height / 2)) * speed;
+                        parallaxImg.style.transform = `translateY(${offset}px) translateZ(0)`;
+                    }
+                });
+            }
+
+            // --- FAQ Accordion ---
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                if (question) { // Sprawdzenie czy element istnieje
+                    question.addEventListener('click', () => {
+                        const currentlyActive = document.querySelector('.faq-item.active');
+                        // Zamknij inny aktywny element (jeśli istnieje i nie jest tym klikniętym)
+                        if (currentlyActive && currentlyActive !== item) {
+                            currentlyActive.classList.remove('active');
+                            const activeQuestion = currentlyActive.querySelector('.faq-question');
+                            if (activeQuestion) activeQuestion.classList.remove('active');
+                        }
+                        // Przełącz stan klikniętego elementu
+                        item.classList.toggle('active');
+                        question.classList.toggle('active'); 
+                    });
+                }
+            });
+
+            // --- Current Year in Footer ---
+            const currentYearSpan = document.getElementById('currentYear');
+            if (currentYearSpan) {
+                currentYearSpan.textContent = new Date().getFullYear();
+            }
+        });
+    </script>
+</body>
+</html>
