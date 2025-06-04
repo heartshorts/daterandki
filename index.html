@@ -783,6 +783,11 @@
                 currentYearSpan.textContent = new Date().getFullYear();
             }
         });
+
+        
+  if (location.hostname === "daterandki.pl") {
+    window.location.href = "https://www.daterandki.pl" + location.pathname + location.search + location.hash;
+  }
     </script>
 </body>
 </html>
